@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="keywords" content="コード">
+
+<link rel="stylesheet" href="stylesheet/style_main.css" type="text/css">
+
+<title>sidecode - WIP</title>
+
+<base target="description">
+
+
+<div id="code">
+ <iframe src="code.html" name="code"></iframe>
+</div>
+<div id="description">
+	<iframe src="desc.html" name="description"></iframe>
+</div>
+
+
+
+</head>
+
+<body>
+  <script src="https://riversun.github.io/jsframe/jsframe.js"></script>
+  <script>
+  //body内に記述すること
+    function start() {
+      const jsFrame = new JSFrame();
+      // Create window
+      const frame = jsFrame.create({
+        title: 'Window',
+        left: 20, top: 60, width: 320, height: 220,
+        movable: true,// Enable to be moved  by mouse
+        resizable: true,// Enable to be resized by mouse
+        html: '<div id="my_element" style="padding:10px;font-size:20px;color:darkgray;">Test - floating Window</div>'
+      });
+
+      // Show window
+      frame.show();
+
+    }
+
+    start();
+  </script>
+フレーム対応ブラウザでご覧下さい。
+
+</body>
+</html>

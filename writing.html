@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="keywords" content="コード">
+
+<link rel="stylesheet" href="stylesheet/style_wr.css" type="text/css" id="style_wr">
+
+<title>sidecode - WIP</title>
+
+<script type="text/javascript" src="script/SideCodeLib.js"></script>
+<script type="text/javascript" src="script/SideCodeLib_Exporter5.js"></script>
+<script type="text/javascript" src="script/inWindowPreview.js"></script>
+<script src="https://riversun.github.io/jsframe/jsframe.js"></script>
+
+<div id="topmenu">
+<form name="topmenu">
+  <input type="button" value="ExportInFile" onclick="powerExportHtml();"/>
+  <input type="button" value="PreviewTab" onclick="previewCreator();"/>
+  <input type="button" value="PreviewInWindow" onclick="previewSwitch();"/>
+  <input type="button" value="Tag-Tester" onclick="placeTag();"/>
+  <input type="text" name="TagName" id="TagName" placeholder="Input TagName here."/>
+  <input type="button" value="stackDisplay" onclick="stackDisplay(1);"/>
+  <input type="button" value="tester" onclick="tester();"/>
+</form>
+</div>
+</head>
+
+<body>
+  <div id="writingForm">
+    <form name="code">
+      <textarea id="codewr" name="codewr" cols="60" rows="30"
+      placeholder="write code here." wrap="soft" value="">
+      </textarea>
+    </form>
+
+  <form name="desc">
+    <textarea id="descwr" name="descwr" cols="60" rows="30"
+    placeholder="write description here." wrap="hard" value="">
+    </textarea>
+  </form>
+</div>
+
+
+
+
+<script>
+//body内に記述すること
+
+  beginClear();
+
+
+  function ECHO233(){
+    const kaikai=
+    "<!DOCTYPE html>";
+
+    console.log(kaikai);
+  }
+
+
+  function debugbegin(){
+    console.log("begin");
+    document.code.codewr.value='#include <stdio.h>\n\n[desc test1]\nint main(void){\nprintf("test";);\n[/desc test1]\n}';
+    document.desc.descwr.value="[desc test1]\nここのprintfでコンソールに文字列を出力します\n\n[/desc test1]";
+  }
+</script>
+
+</body>
+</html>

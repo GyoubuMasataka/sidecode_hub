@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="keywords" content="code">
+
+<body>
+<script src="https://riversun.github.io/jsframe/jsframe.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="stylesheet/style_view.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script src="script/SideCodeLib_Exporter5.js"></script>
+<title>sidecode - Preview</title>
+<pre  id="codebody_outer">
+<code id = "codebody">
+preClassText
+</code>
+</pre>
+
+<p id="rawDesc">[desc test1]
+ここのprintfでコンソールに文字列を出力します
+
+[/desc test1]
+</p>
+<p id="changeCode">#include &lt;stdio.h&gt;
+
+<input type="button" value="解説 - test1" onclick="createWindow('test1')"/>
+int main(void){
+printf(&quot;test&quot;;);
+
+}
+</p>
+<p id="rawCode">#include <stdio.h>
+
+[desc test1]
+int main(void){
+printf("test";);
+[/desc test1]
+}
+</p>
+</script>
+<script>
+window.addEventListener("load", function() {
+  localMapTester();
+  hljs.initHighlighting();
+  hljs.initLineNumbersOnLoad();
+});
+
+sendHeight();
+
+function sendHeight(){
+  //let h = document.documentElement.scrollHeight;
+  let h = document.body.scrollHeight;
+  console.log("send-M:"+h);
+  parent.postMessage(h, "*");
+}
+
+</script>
+<style type="text/css">
+.hljs-ln td{
+padding:0px;
+padding-left:5px;
+padding-right:5px;
+}
+</style>
+</body>
+</html>

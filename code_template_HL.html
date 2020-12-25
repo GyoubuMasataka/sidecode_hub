@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="keywords" content="code">
+
+<!--<link rel="stylesheet" href="stylesheet/style_main.css" type="text/css">
+-->
+<!--
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
+-->
+
+<title>sidecode - Preview</title>
+
+
+<body>
+  <script src="https://riversun.github.io/jsframe/jsframe.js"></script>
+  <script src="script/SideCodeLib_Code.js"></script>
+  <input type="button" value="HLight" onclick="reset();"/>
+  <link rel="stylesheet" id="atom" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/atom-one-dark.min.css">
+  <link rel="stylesheet" href="stylesheet/style_view.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script id="line" src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<!--<input type="button" value="mapTester" onclick="mapTester();"/>-->
+<pre>
+  <code id="codebody" class="c">
+    codetext
+  </code>
+</pre>
+
+
+<script type="text/javascript">
+<!--
+   window.onload = function(){
+    // 親ウィンドウの存在チェック
+    if(!window.opener || window.opener.closed){
+       window.alert('親ウィンドウがありません。');
+       return false;
+    }
+    console.log(document.getElementById("codebody").innerHTML);
+    console.log(window.opener.document.getElementById("codewr").value);
+
+    const rawString =  window.opener.document.getElementById("codewr").value;
+    let modifiedString = rawString.replace(/\&/g,"&amp;").replace(/\</g,"&lt;").replace(/\>/g,"&gt;").replace(/\"/g,"&quot;").replace(/\'/g,"&#39;");
+     modifiedString = modifiedString.replace(/\[desc (.*?)\]/g,'<input type="button" value="解説 - $1" onclick="createWindow(\'$1\')"/>');
+     modifiedString = modifiedString.replace(/\[\/desc .*?\]/g,'');
+    document.getElementById("codebody").innerHTML = modifiedString;
+  }
+-->
+</script>
+
+<script>
+  window.addEventListener("load", function() {
+    hljs.initHighlighting();
+    hljs.initLineNumbersOnLoad();
+    mapTester();
+  });
+
+
+  function reset(){
+    //document.getElementById("codebody").setAttribute("class","c");
+    hljs.initHighlighting();
+  }
+</script>
+
+<style type="text/css">
+.hljs-ln td{
+  padding:0px;
+  padding-left:5px;
+  padding-right:5px;
+}
+</style>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="keywords" content="code">
+
+<!--<link rel="stylesheet" href="stylesheet/style_main.css" type="text/css">
+-->
+<!--
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
+-->
+<title>sidecode - Preview</title>
+</head>
+
+<body>
+  <script src="https://riversun.github.io/jsframe/jsframe.js"></script>
+  <script src="script/inWindowPreview_Lib.js"></script>
+  <!--
+  <input type="button" value="reload" onclick="reloadBody();"/>
+  <input type="button" value="hlight" onclick="hlight();"/>
+-->
+  <link rel="stylesheet" id="atom" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/atom-one-dark.min.css">
+  <link rel="stylesheet" href="stylesheet/style_view.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script id="line" src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<!--<input type="button" value="mapTester" onclick="mapTester();"/>-->
+<pre>
+  <code id="codebody" class="c">
+    codetext
+  </code>
+</pre>
+
+<script type="text/javascript">
+<!--
+   window.onload = function(){
+    // 親ウィンドウの存在チェック
+
+    console.log(document.getElementById("codebody").innerHTML);
+  }
+-->
+</script>
+
+<script>
+window.addEventListener("load", function() {
+  console.log("inner_template_HL:load");
+
+  iframePreviewSet()
+  hljs.initHighlighting();
+  hljs.initLineNumbersOnLoad();
+  innerMapTester();
+
+
+});
+
+function hlight(){
+hljs.initHighlighting();
+hljs.initLineNumbersOnLoad();
+console.log("inner_template_HL:hlight");
+}
+</script>
+
+
+
+</body>
+</html>

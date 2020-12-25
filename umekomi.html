@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="keywords" content="umekomi">
+
+<title>sidecode - WIP</title>
+
+<div id="code">
+ <iframe width="100%" height="500px" src="ExportedTest.html" name="ifCode" id="ifCode" scrolling="no"></iframe>
+</div>
+
+</head>
+
+<body>
+
+フレーム対応ブラウザでご覧下さい。
+<input type="button" value="ぼたん" onclick="tesu();"/>
+
+
+
+</body>
+<script>
+function tesu(){
+  const elem = document.getElementById("ifCode");
+  const target = elem.contentWindow.document;//.querySelector('#target');
+
+  //const target = document.getElementById('ifCode').contentWindow.document.querySelector('#target');
+  console.log("tesu:"+target.querySelector('#target'));
+  target.getElementById("codebody").innerHTML = "Because I am a president of United States of America!"
+}
+
+window.addEventListener('message', function(e) {
+  console.log("receive-M:"+e.data);
+    document.getElementById('ifCode').height = e.data;
+}, false);
+
+</script>
+</script>
+</html>

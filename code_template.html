@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="keywords" content="code">
+
+<!--<link rel="stylesheet" href="stylesheet/style_main.css" type="text/css">
+-->
+<!--
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
+-->
+<link rel="stylesheet" href="stylesheet/desert.css">
+<title>sidecode - Preview</title>
+<script src="script/SideCodeLib_Code.js"></script>
+
+<body>
+<!--<input type="button" value="mapTester" onclick="mapTester();"/>-->
+<pre class="prettyprint linenums tester1" id="codebody">
+preClassText
+</pre>
+
+<script src="script/prettify.js"></script>
+
+<script type="text/javascript">
+<!--
+   window.onload = function(){
+    // 親ウィンドウの存在チェック
+    if(!window.opener || window.opener.closed){
+       window.alert('親ウィンドウがありません。');
+       return false;
+    }
+    console.log(document.getElementById("codebody").innerHTML);
+    console.log(window.opener.document.getElementById("codewr").value);
+
+    const rawString =  window.opener.document.getElementById("codewr").value;
+    let modifiedString = rawString.replace(/\&/g,"&amp;").replace(/\</g,"&lt;").replace(/\>/g,"&gt;").replace(/\"/g,"&quot;").replace(/\'/g,"&#39;");
+     modifiedString = modifiedString.replace(/\[desc (.*?)\]/g,'<input type="button" value="解説 - $1" onclick="createWindow(\'$1\')"/>');
+     modifiedString = modifiedString.replace(/\[\/desc .*?\]/g,'');
+    document.getElementById("codebody").innerHTML = modifiedString;
+  }
+-->
+</script>
+
+<script>
+  window.addEventListener("load", function() {
+    PR.prettyPrint();
+    mapTester();
+  });
+</script>
+
+
+<body>
+  <script src="https://riversun.github.io/jsframe/jsframe.js"></script>
+
+
+</body>
+</html>
