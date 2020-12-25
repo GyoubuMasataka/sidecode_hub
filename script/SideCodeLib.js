@@ -488,7 +488,7 @@ function beginClear() {
 	codeUndoStack[i]="";
 	descUndoStack[i]="";
 
-	debugbegin();
+	//debugbegin();
 }
 
 function redoStackClearer(Area){
