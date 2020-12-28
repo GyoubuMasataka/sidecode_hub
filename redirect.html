@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="redirecr" content="redirect">
+
+
+<title>sidecode - redirect</title>
+
+<body>
+  redirecting
+
+<script>
+  setTimeout("redirect()", 0);
+  function redirect(){
+    let url = document.URL;
+    let redirecter = url.split('?')[1];
+    if (typeof redirecter === "undefined") {
+      redirecter = "writing.html";
+    }
+    console.log("");
+      location.href=redirecter;
+  }
+</script>
+
+</body>
+</html>
