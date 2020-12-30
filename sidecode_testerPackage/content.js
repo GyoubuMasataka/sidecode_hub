@@ -24,8 +24,8 @@
   const heightScript = document.createElement('script');
   heightScript.id = "heightScript";
   heightScript.type = "text/javascript";
-  heightScript.src =  "http://localhost:8000/script/heightScript.js";
-  //heightScript.src =  "https://gyoubumasataka.github.io/sidecode_hub/script/heightScript.js";
+  //heightScript.src =  "http://localhost:8000/script/heightScript.js";
+  heightScript.src =  "https://gyoubumasataka.github.io/sidecode_hub/script/heightScript.js";
 
 
 
