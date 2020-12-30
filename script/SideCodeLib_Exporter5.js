@@ -1,24 +1,3 @@
-function exportHtml(){
-	const codeText = document.code.codewr.value;
-	const descText = document.desc.descwr.value;
-	let fs = WScript.CreateObject("Scripting.FileSystemObject");
-	let templateFile = fs.OpenTextFile("../code_Exporter.html",1);
-	let template = templateFile.ReadAll
-	template = template.replace("StringReplacedDesc",descText).replace("StringReplacedCode",codeText);
-	const pipe = new Blob([template], { "type": "text/plain" });
-
-	//document.getElementById("createFile").href = window.URL.createObjectURL(blob);
-	//window.URL.createObjectURL(pipe);
-	const url = URL.createObjectURL(pipe);
-  const a = document.createElement("a");
-  document.body.appendChild(a);
-  a.download = 'ExportedTest.html';
-  a.href = url;
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
 function powerExportHtml(){
 	const codeText = document.code.codewr.value;//"[desc test1]\ntest1\n\n[/desc test1]\n[desc test2]\n\ntest2\n[/desc test2]";
 	const descText = document.desc.descwr.value;//"[desc test1]\ntest1\n\n[/desc test1]\n[desc test2]\n\ntest2\n[/desc test2]";
@@ -58,7 +37,13 @@ function powerExportHtml(){
 				'localMapTester();\n'+
 		    'hljs.initHighlighting();\n'+
 				'hljs.initLineNumbersOnLoad();\n'+
-		  '});\n'+
+		  '});\n\n'+
+			'sendHeight();\n'+
+			'function sendHeight(){\n'+
+			  'let h = document.body.scrollHeight;\n'+
+			  'console.log("send-M:"+h);\n'+
+			  'parent.postMessage(h, "*");\n'+
+			'}\n'+
 		'</script>\n'+
 		'<style type="text/css">\n'+
 			'.hljs-ln td{\n'+
