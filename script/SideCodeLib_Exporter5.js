@@ -10,6 +10,7 @@ function powerExportHtml(){
 		'<script src="https://riversun.github.io/jsframe/jsframe.js"></script>\n'+
 		'<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/atom-one-dark.min.css">\n'+
 		'<link rel="stylesheet" href="https://gyoubumasataka.github.io/sidecode_hub/stylesheet/style_view.css">\n'+
+		'<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">\n'+
 		'<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>\n' +
 	  '<script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>\n'+
 		'<script src="https://gyoubumasataka.github.io/sidecode_hub/script/SideCodeLib_Exporter5.js"></script>\n' +
