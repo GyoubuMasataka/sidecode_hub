@@ -1,0 +1,26 @@
+{
+  // Required
+  "manifest_version": 2,
+  "name": "sidecode_inserter",
+  "version": "0.1.1.0",
+
+  // Recommended
+  "description": "Package for sidecode - show description beside source code. Detail in https://gyoubumasataka.github.io/sidecode_hub/",
+  "icons": {
+      "16": "sc_16.png",
+      "48": "sc_48.png",
+      "128": "sc_128.png"
+  },
+
+  // Pick one (or none)
+
+  "content_scripts": [
+      {
+          "matches": [ "https://qiita.com/*","https://note.com/*","https://gyoubumasataka.github.io/sidecode_hub/*" ],
+          "js": [ "content.js" ]
+      }
+  ],
+  "permissions": [
+    "activeTab"
+  ]
+}
