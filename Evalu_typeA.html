@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="keywords" content="code">
+
+<body>
+<script src="https://riversun.github.io/jsframe/jsframe.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="https://gyoubumasataka.github.io/sidecode_hub/stylesheet/style_view.css">
+<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script src="https://gyoubumasataka.github.io/sidecode_hub/script/SideCodeLib_Exporter5.js"></script>
+<script src="https://gyoubumasataka.github.io/sidecode_hub/script/SideCodeLib_Code.js"></script>
+<title>sidecode - Preview</title>
+<pre id="output10"></pre>
+
+<p>
+	タイプ:A<br>
+	「start」ボタンを押してから、ソースコードと本文を読んでください。<br>
+	この際、ソースコードと解説は自分で対応が分かるように読んでください<br>
+	(コードを見つけたら解説に戻ってくるような形で構いません。解説を覚えていられたら戻ってこなくても大丈夫です)<br>
+	読み終わったら「end」ボタンを押してください。<br>
+	ボタンはページ最下部にも設置してあります。
+</p>
+
+<p>
+	<input type="button" value="start" onclick="eval_start();">
+	<input type="button" value="end" onclick="eval_end();">
+	<br>───────────────────────────────
+</p>
+
+<p id="description">
+	<b>・2~7行目<br></b>
+	宣言部。見ての通りjavaです<br>
+	jsoupがないとやってられなかった<br>
+	<br>
+	<b>・15行目<br></b>
+	トップページの読み取り部。<br>
+	jsoupを使ってリファラをつけて取得して、これを基に他ファイルの取得に行く<br>
+	<br>
+	<b>・17~23行目<br></b>
+	css取得部。linkタグの中でもtypeがtext/cssのものだけを選択する。<br>
+	もしcssという文字列が入っていたらcssを取得して専用の処理に回す<br>
+	(cssは画像リンクが内蔵されていたりするので)<br>
+　<br>
+	<b>・29~35行目<br></b>
+	js取得部。jsは特にリンクはないのでそのまま保存します<br>
+	<br>
+	<b>・39~43行目<br></b>
+	imgタグで張り付けられている画像を取得。<br>
+	本プログラムはappleのトップページ用なので縁遠いが、<br>
+	サイトによっては重要なはず。<br>
+	<br>
+	<b>・44行目<br></b>
+	実行時に深さの指定をするので、現在の深さチェック。<br>
+	最大の深さなら実行しないが、そうでないなら再起処理に向かう<br>
+	<br>
+	<b>・44~51行目<br></b>
+	htmlファイルのリンクが見つかった場合には、深さに1大きい値を持たせて再起処理を行う。<br>
+	<br>
+	<b>・91行目<br></b>
+	スレッドで実行するのでThreadを継承させています。<br>
+	<br>
+	<b>・105~109行目<br></b>
+	もう持っているファイルかどうかもチェック。<br>
+	持っていなかったら取得処理に行きます<br>
+	<br>
+	<b>・119~132行目<br></b>
+	ほとんどcssの取得と同じです。<br>
+<br>
+</p>
+
+<pre  id="codebody_outer">
+<code id = "codebody">
+import java.io.IOException;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+public class HtmlParser {
+	static void htmlParse(String htmlUrl,int LimitDepth,int currentDepth){
+		System.out.println("Debug:HtmlParser:"+htmlUrl);
+		int fileExist;
+		String exploredUrl;
+		try{
+			Document document = Jsoup.connect(NameFixer.nameFixer(htmlUrl,"html")).referrer(ThCrawler.startUrl).get();
+
+			Elements elements_css = document.select("link[href]").select("link[type=text/css]");
+			for (Element element_css : elements_css) {
+
+				if (element_css.attr("href").contains("css")) {
+						exploredUrl = element_css.attr("href").replaceAll("^/(.)",ThCrawler.htmlBasePath+"/$1" );
+						System.out.println("State css:"+exploredUrl);
+						ThCrawler.exec.execute(new cssThread(htmlUrl,exploredUrl));
+
+
+				}
+			}
+
+			Elements elements_js = document.select("script[src]").select("[type=text/javascript]");
+			for (Element element_js : elements_js) {
+				System.out.println("State js(script src):" + element_js.attr("src"));
+				if (element_js.attr("src").contains("js")) {
+					exploredUrl =  element_js.attr("src").replaceAll("^/(.)",ThCrawler.htmlBasePath+"/$1");
+					System.out.println("State js:"+exploredUrl);
+					ThCrawler.exec.execute(new jsThread(htmlUrl,exploredUrl));
+				}
+			}
+
+			Elements elements_img = document.select("img[src]");
+			for (Element element_img : elements_img) {
+				exploredUrl =  element_img.attr("src").replaceAll("^/(.)",ThCrawler.htmlBasePath+"/$1");
+				fileExist = FileGetter.getFile(exploredUrl, ThCrawler.ExePath, htmlUrl,false);
+			}
+			if(currentDepth < LimitDepth) {
+				Elements elements_html2 = document.select("a[href]").select("a[data-analytics-id!=film-cdc-response]");
+
+				for (Element element_html2 : elements_html2) {
+					exploredUrl = element_html2.attr("href").replaceAll("^/(.)",ThCrawler.htmlBasePath+"/$1").replaceAll("#(.*?)",htmlUrl+"#($1)");
+					if(!exploredUrl.matches("^#.*?")) {
+						System.out.println("State html(a href):" + exploredUrl);
+						ThCrawler.crawl(ThCrawler.startUrl, exploredUrl, LimitDepth, currentDepth+1);
+					}
+				}
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+}
+
+class cssThread extends Thread{
+	private String htmlUrl;
+	private String exploredUrl;
+
+	public cssThread(String htmlUrl,String exploredUrl) {
+		this.htmlUrl = htmlUrl;
+		this.exploredUrl = exploredUrl;
+	}
+
+	public void run() {
+		int fileExist = FileGetter.getFile(exploredUrl, ThCrawler.ExePath, htmlUrl,false);
+		System.out.println("cssThread/run."+htmlUrl+" & "+exploredUrl);
+		if(fileExist!=-1) {
+			CssParser.cssParse(exploredUrl,LocalPathCreator.localPathCreator(exploredUrl));
+		}
+		System.out.println("cssThread/end;"+exploredUrl);
+		return;
+	}
+}
+
+class jsThread extends Thread{
+	private String htmlUrl;
+	private String exploredUrl;
+
+	public jsThread(String htmlUrl,String exploredUrl) {
+		this.htmlUrl = htmlUrl;
+		this.exploredUrl = exploredUrl;
+	}
+
+	public void run() {
+		int fileExist = FileGetter.getFile(exploredUrl, ThCrawler.ExePath, htmlUrl,false);
+		return;
+	}
+}
+</code>
+</pre>
+
+<p>
+	<input type="button" value="start" onclick="eval_start();">
+	<input type="button" value="end" onclick="eval_end();">
+	<br>
+</p>
+
+<script>
+window.addEventListener("load", function() {
+hljs.initHighlighting();
+hljs.initLineNumbersOnLoad();
+});
+
+sendHeight();
+function sendHeight(){
+let h = document.body.scrollHeight;
+console.log("send-M:"+h);
+parent.postMessage(h, "*");
+}
+</script>
+
+<script>
+let startTime,endTime;
+function eval_start(){
+	startTime = performance.now();
+}
+
+function eval_end(){
+	endTime = performance.now();
+	const TimeinSecond = (endTime - startTime)/1000;
+	var output =
+    'Sum of Scroll: ' +
+    sumOfScroll + "\n" +
+		'Time: ' +
+		TimeinSecond + '秒';
+  setText(document.getElementById('output10'), output);
+ const message = "協力ありがとうございます。\n\n" +
+ 'スクロール量: ' +
+ sumOfScroll + "  /  " +
+ 'かかった時間: ' +
+ TimeinSecond + '秒' +
+ "結果はページ右下部にも表示されます。\n\n" +
+ "つづいてタイプBをお試ししていただきます。\n念のためスクロール量と時間をメモしたうえでこのメッセージを閉じてください";
+window.alert(message);
+window.open("Evalu_typeB.html");
+
+}
+</script>
+
+
+<script>
+
+let sumOfScroll = 0;
+let prevYOffset = 0;
+
+var getScrollTop = function(window) {
+  var pageYOffset = window.pageYOffset;
+  var document = window.document;
+  var body = document.body;
+
+  if (pageYOffset !== undefined) {
+    return pageYOffset;
+  }
+
+  /**
+   * @see https://dev.opera.com/articles/fixing-the-scrolltop-bug/
+
+   * refer from https://qiita.com/sounisi5011/items/1a5a2410fce27ba6d8ae
+   */
+  var scrollingElement =
+    'scrollingElement' in document
+      ? document.scrollingElement
+      : window.navigator.userAgent.indexOf('WebKit') != -1
+      ? body
+      : document.documentElement || body.parentNode;
+
+  return scrollingElement.scrollTop;
+};
+
+var getScrollBottom = function(window) {
+  var document = window.document;
+  var body = document.body;
+  var html = document.documentElement || body.parentNode;
+
+  /**
+   * @see https://dev.opera.com/articles/fixing-the-scrolltop-bug/
+   */
+  var scrollingElement =
+    'scrollingElement' in document
+      ? document.scrollingElement
+      : window.navigator.userAgent.indexOf('WebKit') != -1
+      ? body
+      : html;
+
+  var maxScrollTop = scrollingElement.scrollHeight - html.clientHeight;
+
+  return maxScrollTop - getScrollTop(window);
+};
+
+// --- //
+
+var setText =
+  'textContent' in document.documentElement
+    ? function(targetNode, text) {
+        targetNode.textContent = text;
+      }
+    : function(targetNode, text) {
+        var childNode;
+        while ((childNode = targetNode.firstChild)) {
+          targetNode.removeChild(childNode);
+        }
+        targetNode.appendChild(
+          (targetNode.ownerDocument || document).createTextNode(text),
+        );
+      };
+var addEvent = function(target, type, listener) {
+  if (target.addEventListener) {
+    target.addEventListener(type, listener, false);
+  } else if (target.attachEvent) {
+    target.attachEvent('on' + type, listener);
+  }
+};
+
+var rerender = (function(callback) {
+  var requestAnimationFrame =
+    window.requestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    function(callback) {
+      window.setTimeout(callback, 1000 / 60);
+    };
+  var frameCallback = function() {
+    callback();
+    rendering = false;
+  };
+  var rendering = false;
+
+  return function() {
+    if (!rendering) {
+      rendering = true;
+      requestAnimationFrame(frameCallback);
+    }
+  };
+})(function() {
+  sumOfScroll = sumOfScroll + Math.abs(getScrollTop(window) - prevYOffset);
+  var output =
+    'getScrollTop: ' +
+    getScrollTop(window) +
+    '\n' +
+    'getScrollBottom: ' +
+    getScrollBottom(window) +
+    '\n' +
+    'prevYO: ' +
+    prevYOffset +
+    '\n' +
+    'sum: ' +
+    sumOfScroll;
+
+  //setText(document.getElementById('output10'), output);
+  prevYOffset = getScrollTop(window);
+	console.log("sum:"+sumOfScroll);
+
+});
+
+addEvent(window, 'scroll', rerender);
+addEvent(document, 'scroll', rerender);
+rerender();
+</script>
+<script src="http://static.jsbin.com/js/render/edit.js?4.1.8"></script>
+<script>jsbinShowEdit && jsbinShowEdit({"static":"http://static.jsbin.com","root":"http://jsbin.com"});</script>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-1656750-34', 'auto');
+ga('require', 'linkid', 'linkid.js');
+ga('require', 'displayfeatures');
+ga('send', 'pageview');
+
+</script>
+<style type="text/css">
+.hljs-ln td{
+padding:0px;
+padding-left:5px;
+padding-right:5px;
+}
+</style>
+<style id="jsbin-css">
+
+h1 {
+  white-space: nowrap;
+}
+#output10 {
+    background-color: #eee;
+    bottom: 0;
+    margin: 1em;
+    min-width: 15em;
+    position: fixed;
+    right: 0;
+}
+
+</style>
+</body>
+</html>
