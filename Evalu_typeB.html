@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="keywords" content="code">
+
+<body>
+<script src="https://riversun.github.io/jsframe/jsframe.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="https://gyoubumasataka.github.io/sidecode_hub/stylesheet/style_view.css">
+<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script src="https://gyoubumasataka.github.io/sidecode_hub/script/SideCodeLib_Exporter5.js"></script>
+<script src="https://gyoubumasataka.github.io/sidecode_hub/script/SideCodeLib_Code.js"></script>
+<title>sidecode - Preview</title>
+<pre id="output10"></pre>
+
+<p>
+	タイプ:B<br>
+	「start」ボタンを押してから、ソースコードと本文を読んでください。<br>
+	読み終わったら「end」ボタンを押してください。<br>
+	ボタンはページ最下部にも設置してあります。
+</p>
+
+<p>
+	<input type="button" value="start" onclick="eval_start();">
+	<input type="button" value="end" onclick="eval_end();">
+</p>
+
+<pre  id="codebody_outer">
+<code id = "codebody">
+preClassText
+</code>
+</pre>
+
+<p>
+	<input type="button" value="start" onclick="eval_start();">
+	<input type="button" value="end" onclick="eval_end();">
+</p>
+
+<p id="rawDesc">[desc declare]
+宣言部。見ての通りjavaです
+jsoupがないとやってられなかった
+
+[/desc declare]
+
+[desc autoInsert_1]
+トップページの読み取り部。
+jsoupを使ってリファラをつけて取得して、これを基に他ファイルの取得に行く
+
+[/desc autoInsert_1]
+
+[desc autoInsert_2]
+css取得部。linkタグの中でもtypeがtext/cssのものだけを選択する。
+もしcssという文字列が入っていたらcssを取得して専用の処理に回す
+(cssは画像リンクが内蔵されていたりするので)
+
+[/desc autoInsert_2]
+
+[desc autoInsert_3]
+js取得部。jsは特にリンクはないのでそのまま保存します
+
+[/desc autoInsert_3]
+[desc autoInsert_4]
+imgタグで張り付けられている画像を取得。
+本プログラムはappleのトップページ用なので縁遠いが、
+サイトによっては重要なはず。
+
+[/desc autoInsert_4]
+[desc autoInsert_5]
+実行時に深さの指定をするので、現在の深さチェック。
+最大の深さなら実行しないが、そうでないなら再起処理に向かう
+
+[/desc autoInsert_5]
+[desc autoInsert_6]
+htmlファイルのリンクが見つかった場合には、深さに1大きい値を持たせて再起処理を行う。
+
+[/desc autoInsert_6]
+[desc autoInsert_7]
+スレッドで実行するのでThreadを継承させています。
+
+[/desc autoInsert_7]
+[desc autoInsert_8]
+もう持っているファイルかどうかもチェック。
+持っていなかったら取得処理に行きます
+
+[/desc autoInsert_8]
+[desc autoInsert_9]
+ほとんどcssの取得と同じです。
+
+[/desc autoInsert_9]
+
+</p>
+<p id="changeCode"><input type="button" value="解説 - declare" onclick="createWindow('declare')"/>
+import java.io.IOException;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+
+
+
+public class HtmlParser {
+	static void htmlParse(String htmlUrl,int LimitDepth,int currentDepth){
+		System.out.println(&quot;Debug:HtmlParser:&quot;+htmlUrl);
+		int fileExist;
+		String exploredUrl;
+		try{
+<input type="button" value="解説 - autoInsert_1" onclick="createWindow('autoInsert_1')"/>
+			Document document = Jsoup.connect(NameFixer.nameFixer(htmlUrl,&quot;html&quot;)).referrer(ThCrawler.startUrl).get();
+
+
+
+<input type="button" value="解説 - autoInsert_2" onclick="createWindow('autoInsert_2')"/>
+			Elements elements_css = document.select(&quot;link[href]&quot;).select(&quot;link[type=text/css]&quot;);
+			for (Element element_css : elements_css) {
+
+				if (element_css.attr(&quot;href&quot;).contains(&quot;css&quot;)) {
+						exploredUrl = element_css.attr(&quot;href&quot;).replaceAll(&quot;^/(.)&quot;,ThCrawler.htmlBasePath+&quot;/$1&quot; );
+						System.out.println(&quot;State css:&quot;+exploredUrl);
+						ThCrawler.exec.execute(new cssThread(htmlUrl,exploredUrl));
+
+
+
+
+				}
+			}
+
+<input type="button" value="解説 - autoInsert_3" onclick="createWindow('autoInsert_3')"/>
+			Elements elements_js = document.select(&quot;script[src]&quot;).select(&quot;[type=text/javascript]&quot;);
+			for (Element element_js : elements_js) {
+				System.out.println(&quot;State js(script src):&quot; + element_js.attr(&quot;src&quot;));
+				if (element_js.attr(&quot;src&quot;).contains(&quot;js&quot;)) {
+					exploredUrl =  element_js.attr(&quot;src&quot;).replaceAll(&quot;^/(.)&quot;,ThCrawler.htmlBasePath+&quot;/$1&quot;);
+					System.out.println(&quot;State js:&quot;+exploredUrl);
+					ThCrawler.exec.execute(new jsThread(htmlUrl,exploredUrl));
+
+
+
+				}
+			}
+
+			<input type="button" value="解説 - autoInsert_4" onclick="createWindow('autoInsert_4')"/>
+Elements elements_img = document.select(&quot;img[src]&quot;);
+			for (Element element_img : elements_img) {
+				System.out.println(&quot;State Img(img src):&quot; + element_img.attr(&quot;src&quot;));
+
+				exploredUrl =  element_img.attr(&quot;src&quot;).replaceAll(&quot;^/(.)&quot;,ThCrawler.htmlBasePath+&quot;/$1&quot;);
+				fileExist = FileGetter.getFile(exploredUrl, ThCrawler.ExePath, htmlUrl,false);
+			}
+
+
+
+
+			<input type="button" value="解説 - autoInsert_5" onclick="createWindow('autoInsert_5')"/>
+if(currentDepth &lt; LimitDepth) {
+
+
+
+
+<input type="button" value="解説 - autoInsert_6" onclick="createWindow('autoInsert_6')"/>
+				Elements elements_html2 = document.select(&quot;a[href]&quot;).select(&quot;a[data-analytics-id!=film-cdc-response]&quot;);
+
+				for (Element element_html2 : elements_html2) {
+					exploredUrl = element_html2.attr(&quot;href&quot;).replaceAll(&quot;^/(.)&quot;,ThCrawler.htmlBasePath+&quot;/$1&quot;).replaceAll(&quot;#(.*?)&quot;,htmlUrl+&quot;#($1)&quot;);
+					if(!exploredUrl.matches(&quot;^#.*?&quot;)) {
+						System.out.println(&quot;State html(a href):&quot; + exploredUrl);
+						ThCrawler.crawl(ThCrawler.startUrl, exploredUrl, LimitDepth, currentDepth+1);
+					}
+				}
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+}
+
+
+
+<input type="button" value="解説 - autoInsert_7" onclick="createWindow('autoInsert_7')"/>
+
+class cssThread extends Thread{
+
+
+
+	private String htmlUrl;
+	private String exploredUrl;
+
+	public cssThread(String htmlUrl,String exploredUrl) {
+		this.htmlUrl = htmlUrl;
+		this.exploredUrl = exploredUrl;
+	}
+
+	public void run() {<input type="button" value="解説 - autoInsert_8" onclick="createWindow('autoInsert_8')"/>
+
+		int fileExist = FileGetter.getFile(exploredUrl, ThCrawler.ExePath, htmlUrl,false);
+		if(fileExist!=-1) {
+			CssParser.cssParse(exploredUrl,LocalPathCreator.localPathCreator(exploredUrl));
+			//rp.replaceCss(exploredUrl, LocalPathCreator.localPathCreator(exploredUrl));
+		}
+		System.out.println(&quot;cssThread/end;&quot;+exploredUrl);
+		return;
+	}
+
+
+
+}
+<input type="button" value="解説 - autoInsert_9" onclick="createWindow('autoInsert_9')"/>
+
+class jsThread extends Thread{
+	private String htmlUrl;
+	private String exploredUrl;
+
+	public jsThread(String htmlUrl,String exploredUrl) {
+		this.htmlUrl = htmlUrl;
+		this.exploredUrl = exploredUrl;
+	}
+
+	public void run() {
+		int fileExist = FileGetter.getFile(exploredUrl, ThCrawler.ExePath, htmlUrl,false);
+		return;
+	}
+}
+
+
+
+</p>
+<p id="rawCode">[desc declare]
+import java.io.IOException;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+[/desc declare]
+
+
+public class HtmlParser {
+	static void htmlParse(String htmlUrl,int LimitDepth,int currentDepth){
+		System.out.println("Debug:HtmlParser:"+htmlUrl);
+		int fileExist;
+		String exploredUrl;
+		try{
+[desc autoInsert_1]
+			Document document = Jsoup.connect(NameFixer.nameFixer(htmlUrl,"html")).referrer(ThCrawler.startUrl).get();
+
+[/desc autoInsert_1]
+
+[desc autoInsert_2]
+			Elements elements_css = document.select("link[href]").select("link[type=text/css]");
+			for (Element element_css : elements_css) {
+
+				if (element_css.attr("href").contains("css")) {
+						exploredUrl = element_css.attr("href").replaceAll("^/(.)",ThCrawler.htmlBasePath+"/$1" );
+						System.out.println("State css:"+exploredUrl);
+						ThCrawler.exec.execute(new cssThread(htmlUrl,exploredUrl));
+
+[/desc autoInsert_2]
+
+
+				}
+			}
+
+[desc autoInsert_3]
+			Elements elements_js = document.select("script[src]").select("[type=text/javascript]");
+			for (Element element_js : elements_js) {
+				System.out.println("State js(script src):" + element_js.attr("src"));
+				if (element_js.attr("src").contains("js")) {
+					exploredUrl =  element_js.attr("src").replaceAll("^/(.)",ThCrawler.htmlBasePath+"/$1");
+					System.out.println("State js:"+exploredUrl);
+					ThCrawler.exec.execute(new jsThread(htmlUrl,exploredUrl));
+
+[/desc autoInsert_3]
+
+				}
+			}
+
+			[desc autoInsert_4]
+Elements elements_img = document.select("img[src]");
+			for (Element element_img : elements_img) {
+				System.out.println("State Img(img src):" + element_img.attr("src"));
+
+				exploredUrl =  element_img.attr("src").replaceAll("^/(.)",ThCrawler.htmlBasePath+"/$1");
+				fileExist = FileGetter.getFile(exploredUrl, ThCrawler.ExePath, htmlUrl,false);
+			}
+
+[/desc autoInsert_4]
+
+
+			[desc autoInsert_5]
+if(currentDepth < LimitDepth) {
+
+
+[/desc autoInsert_5]
+
+[desc autoInsert_6]
+				Elements elements_html2 = document.select("a[href]").select("a[data-analytics-id!=film-cdc-response]");
+
+				for (Element element_html2 : elements_html2) {
+					exploredUrl = element_html2.attr("href").replaceAll("^/(.)",ThCrawler.htmlBasePath+"/$1").replaceAll("#(.*?)",htmlUrl+"#($1)");
+					if(!exploredUrl.matches("^#.*?")) {
+						System.out.println("State html(a href):" + exploredUrl);
+						ThCrawler.crawl(ThCrawler.startUrl, exploredUrl, LimitDepth, currentDepth+1);
+					}
+				}
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+}
+
+[/desc autoInsert_6]
+
+[desc autoInsert_7]
+
+class cssThread extends Thread{
+
+[/desc autoInsert_7]
+
+	private String htmlUrl;
+	private String exploredUrl;
+
+	public cssThread(String htmlUrl,String exploredUrl) {
+		this.htmlUrl = htmlUrl;
+		this.exploredUrl = exploredUrl;
+	}
+
+	public void run() {[desc autoInsert_8]
+
+		int fileExist = FileGetter.getFile(exploredUrl, ThCrawler.ExePath, htmlUrl,false);
+		if(fileExist!=-1) {
+			CssParser.cssParse(exploredUrl,LocalPathCreator.localPathCreator(exploredUrl));
+			//rp.replaceCss(exploredUrl, LocalPathCreator.localPathCreator(exploredUrl));
+		}
+		System.out.println("cssThread/end;"+exploredUrl);
+		return;
+	}
+
+[/desc autoInsert_8]
+
+}
+[desc autoInsert_9]
+
+class jsThread extends Thread{
+	private String htmlUrl;
+	private String exploredUrl;
+
+	public jsThread(String htmlUrl,String exploredUrl) {
+		this.htmlUrl = htmlUrl;
+		this.exploredUrl = exploredUrl;
+	}
+
+	public void run() {
+		int fileExist = FileGetter.getFile(exploredUrl, ThCrawler.ExePath, htmlUrl,false);
+		return;
+	}
+}
+
+[/desc autoInsert_9]
+
+</p>
+</script>
+<script>
+window.addEventListener("load", function() {
+localMapTester();
+hljs.initHighlighting();
+hljs.initLineNumbersOnLoad();
+});
+
+sendHeight();
+function sendHeight(){
+let h = document.body.scrollHeight;
+console.log("send-M:"+h);
+parent.postMessage(h, "*");
+}
+</script>
+
+<script>
+let startTime,endTime;
+function eval_start(){
+	startTime = performance.now();
+}
+
+function eval_end(){
+	endTime = performance.now();
+	const TimeinSecond = (endTime - startTime)/1000;
+	var output =
+    'Sum of Scroll: ' +
+    sumOfScroll + "\n" +
+		'Time: ' +
+		TimeinSecond + '秒';
+  setText(document.getElementById('output10'), output);
+ const message = "協力ありがとうございます。\nhttps://forms.gle/SiqVRw17mfNdknQq7\nこちらのアンケートフォームに結果をご記入ください\n\n" +
+ "結果はページ右下部にも表示されます。\n\n" +
+ 'スクロール量: ' +
+ sumOfScroll + "  /  " +
+ 'かかった時間: ' +
+ TimeinSecond + '秒';
+window.alert(message);
+window.open("https://forms.gle/SiqVRw17mfNdknQq7");
+
+}
+</script>
+
+
+<script>
+
+let sumOfScroll = 0;
+let prevYOffset = 0;
+
+var getScrollTop = function(window) {
+  var pageYOffset = window.pageYOffset;
+  var document = window.document;
+  var body = document.body;
+
+  if (pageYOffset !== undefined) {
+    return pageYOffset;
+  }
+
+  /**
+   * @see https://dev.opera.com/articles/fixing-the-scrolltop-bug/
+
+   * refer from https://qiita.com/sounisi5011/items/1a5a2410fce27ba6d8ae
+   */
+  var scrollingElement =
+    'scrollingElement' in document
+      ? document.scrollingElement
+      : window.navigator.userAgent.indexOf('WebKit') != -1
+      ? body
+      : document.documentElement || body.parentNode;
+
+  return scrollingElement.scrollTop;
+};
+
+var getScrollBottom = function(window) {
+  var document = window.document;
+  var body = document.body;
+  var html = document.documentElement || body.parentNode;
+
+  /**
+   * @see https://dev.opera.com/articles/fixing-the-scrolltop-bug/
+   */
+  var scrollingElement =
+    'scrollingElement' in document
+      ? document.scrollingElement
+      : window.navigator.userAgent.indexOf('WebKit') != -1
+      ? body
+      : html;
+
+  var maxScrollTop = scrollingElement.scrollHeight - html.clientHeight;
+
+  return maxScrollTop - getScrollTop(window);
+};
+
+// --- //
+
+var setText =
+  'textContent' in document.documentElement
+    ? function(targetNode, text) {
+        targetNode.textContent = text;
+      }
+    : function(targetNode, text) {
+        var childNode;
+        while ((childNode = targetNode.firstChild)) {
+          targetNode.removeChild(childNode);
+        }
+        targetNode.appendChild(
+          (targetNode.ownerDocument || document).createTextNode(text),
+        );
+      };
+var addEvent = function(target, type, listener) {
+  if (target.addEventListener) {
+    target.addEventListener(type, listener, false);
+  } else if (target.attachEvent) {
+    target.attachEvent('on' + type, listener);
+  }
+};
+
+var rerender = (function(callback) {
+  var requestAnimationFrame =
+    window.requestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    function(callback) {
+      window.setTimeout(callback, 1000 / 60);
+    };
+  var frameCallback = function() {
+    callback();
+    rendering = false;
+  };
+  var rendering = false;
+
+  return function() {
+    if (!rendering) {
+      rendering = true;
+      requestAnimationFrame(frameCallback);
+    }
+  };
+})(function() {
+  sumOfScroll = sumOfScroll + Math.abs(getScrollTop(window) - prevYOffset);
+  var output =
+    'getScrollTop: ' +
+    getScrollTop(window) +
+    '\n' +
+    'getScrollBottom: ' +
+    getScrollBottom(window) +
+    '\n' +
+    'prevYO: ' +
+    prevYOffset +
+    '\n' +
+    'sum: ' +
+    sumOfScroll;
+
+  //setText(document.getElementById('output10'), output);
+  prevYOffset = getScrollTop(window);
+	console.log("sum:"+sumOfScroll);
+
+});
+
+addEvent(window, 'scroll', rerender);
+addEvent(document, 'scroll', rerender);
+rerender();
+</script>
+<script src="http://static.jsbin.com/js/render/edit.js?4.1.8"></script>
+<script>jsbinShowEdit && jsbinShowEdit({"static":"http://static.jsbin.com","root":"http://jsbin.com"});</script>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-1656750-34', 'auto');
+ga('require', 'linkid', 'linkid.js');
+ga('require', 'displayfeatures');
+ga('send', 'pageview');
+
+</script>
+<style type="text/css">
+.hljs-ln td{
+padding:0px;
+padding-left:5px;
+padding-right:5px;
+}
+</style>
+<style id="jsbin-css">
+
+h1 {
+  white-space: nowrap;
+}
+#output10 {
+    background-color: #eee;
+    bottom: 0;
+    margin: 1em;
+    min-width: 15em;
+    position: fixed;
+    right: 0;
+}
+
+</style>
+</body>
+</html>
