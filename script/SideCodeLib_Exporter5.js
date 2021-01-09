@@ -98,7 +98,7 @@ function createWindow(tagName){
 		},
 		movable: true,// Enable to be moved  by mouse
 		resizable: true,// Enable to be resized by mouse
-		html: '<div id="my_element" style="padding:6px;font-size:14px;color:darkgray;">'
+		html: '<div id="my_element" style="padding:6px;font-size:14px;color:black;">'
 					+ value
 					+'</div>'
 	});
