@@ -54,5 +54,5 @@ https://gyoubumasataka.github.io/sidecode_hub/redirect.html?(埋め込みたい�
 あとはバグ修正とか……
 
 ## 既存のバグ
-・ソースコード内に<div> ~~ </div>みたいにhtmlのタグエリア指定があると出力時にバグる
+・ソースコード内に\<div\> ~~ \</div\>みたいにhtmlのタグエリア指定があると出力時にバグる
  - 変換方式上とても辛い。超がんばればたぶん直せます。
