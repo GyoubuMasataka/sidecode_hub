@@ -392,16 +392,20 @@ parent.postMessage(h, "*");
 
 <script>
 let startTime,endTime;
+let startScroll,endScroll;
 function eval_start(){
 	startTime = performance.now();
+	startScroll = sumOfScroll;
 }
 
 function eval_end(){
 	endTime = performance.now();
+	endScroll = sumOfScroll;
 	const TimeinSecond = (endTime - startTime)/1000;
+	const Lsos = endScroll - startScroll;
 	var output =
     'Sum of Scroll: ' +
-    sumOfScroll + "\n" +
+    Lsos + "\n" +
 		'Time: ' +
 		TimeinSecond + '秒';
   setText(document.getElementById('output10'), output);
